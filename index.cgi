@@ -60,9 +60,9 @@ print qq$
     <div class="top-menu-select" onclick="topmenuselect()"><a href="#select">&#9776;</a></div>
 </div>
 
-<div class="popup" id="Popup" >
-  <span class="close_btn" onclick="Setting_ClsBtn()">&times</span>
-  <div id="popupFrame" style="position: relative;margin: auto; width:550px; top:40px;"> 
+<div class="popup" id="Popup">
+  <div style="background-color:#595959; height:35px;">  <span class="close_btn" onclick="ClsBtn_Popup()">&times</span></div>
+  <div id="popupFrame" style="position: relative;"> 
   </div>
 </div>
 
@@ -73,7 +73,7 @@ print qq$
 $;
 
 print $th_str;
-print "<th></th>";
+print "<th> <img width=\"20px\" src=\"wheel.svg\"> </th>";
 
 print "</tr>\n";
 
@@ -83,10 +83,10 @@ while(my @row = $sth2->fetchrow_array()) {
       if ($row[$i] eq "id") {
         print "<td id=\"td_$data->{$i}\">$row[$i]</td>";
       } else {
-        print "<td id=\"td_$data->{$i}\" onclick=\"change_Popup(this,80,50)\">$row[$i]</td>";
+        print "<td id=\"td_$data->{$i}\" onclick=\"incDec_Popup(this,80,100)\">$row[$i]</td>";
       }  
     }
-print "<td onclick=\"Setting(this.parentNode)\"><img width=\"20px\"src=\"sett.svg\"></td>";
+print "<td onclick=\"changeAll_Popup(this.parentNode)\"><img width=\"20px\"src=\"sett.svg\"></td>";
 print "</tr>\n";
 }
 print qq$	
@@ -103,6 +103,10 @@ document.getElementsByClassName("top-menu-ul")[0].style.marginTop = "0px";
 
 window.onscroll = function() {scrollFunction()};
 
+//--------------------------------------------------------------------------//
+//---------------                Basic                   -------------------//
+//--------------------------------------------------------------------------//
+
 function scrollFunction() {
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
         document.getElementById("myBtn").style.display = "block";
@@ -111,10 +115,77 @@ function scrollFunction() {
     }
 }
 
-function Setting(dom) {
-  clearPopup();
-  var field = document.getElementById("Popup");
+function getdata(command,callback) {
+  var xmlhttp = null;
+  var cb = null;
+  xmlhttp=new XMLHttpRequest();
+  cb = callback;
+  
+  xmlhttp.onreadystatechange = function() {
+    if(xmlhttp.readyState == 4) {
+      if(cb)
+        //cb(xmlhttp.responseText);
+        alert(xmlhttp.responseText);
+      }
+    }
+  xmlhttp.open("GET",command,true);
+  xmlhttp.send(null);
+  }   
+
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+function topmenuselect(){
+  var select = document.getElementsByClassName("top-menu-ul");
+  if (select[0].style.marginTop != "0px") {
+    select[0].style.marginTop = "0px";
+    document.getElementById("list").style.marginTop = "50px";
+  } else {
+    select[0].style.marginTop = "-50px";
+    document.getElementById("list").style.marginTop = "0px";
+  }
+}
+
+
+//------------------------------------------------------------------//
+//------------------------    Basic Popup    -----------------------//
+//------------------------------------------------------------------//
+
+function clearPopup(){
+  // delete recursively
+  var popup_main = document.getElementById("popupFrame");
+  if (popup_main.childNodes.length >1){
+    popup_main.removeChild(popup_main.childNodes[1]);
+    clearPopup();
+  }
+}
+
+function ClsBtn_Popup(){
+  document.getElementById("Popup").style.visibility = "hidden";
+}
+
+function SetMainPopup(width,height) {
+  var field   = document.getElementById("Popup");
+  var clientW = document.body.clientWidth;
+  var clientH = document.body.clientHeight;
+  field.style.width  = width;
+//  var corrHeight = parseInt(height) + 35;
+  field.style.height = parseInt(height)+35;
+  field.style.left   = ((clientW - parseInt(field.style.width.slice(0,-2)))/2) +"px";
+  field.style.top    = ((parseInt(clientH) - parseInt(field.style.height.slice(0,-2)))/3) +"px";
   field.style.visibility = "visible";
+}
+
+//---------------------------------------------------------------------//
+//-----------------       changeAll_Popup     -------------------------//
+//---------------------------------------------------------------------//
+
+function changeAll_Popup(dom) {
+  clearPopup();
+  SetMainPopup("600","130");
+
   var id= dom.id.slice(3);
   var main_tbl_head = document.getElementById("main_tbl_head");
   var popupFrame = document.getElementById("popupFrame");
@@ -148,50 +219,26 @@ function Setting(dom) {
 
   table_node.appendChild(tr_node);  
   popupFrame.appendChild(table_node);
+  document.getElementById("popup_tbl").style.position="relative";
+  document.getElementById("popup_tbl").style.top="10px";
+  document.getElementById("popup_tbl").style.left = ((document.getElementById("popupFrame").clientWidth - document.getElementById("popup_tbl").clientWidth)/2)+"px";
 
+  
   //Button for Sending changes
   var btn_node= document.createElement("input");
   btn_node.type = "button";
   btn_node.value="change";
   btn_node.className="SendBtn";
+  btn_node.style.marginRight=  document.getElementById("popup_tbl").style.left;
   btn_node.onclick= function (e) {
-                send_btn_Setting(this.parentNode);
+                send_btn_UpdateAll_Popup(this.parentNode);
+                document.getElementById("Popup").style.visibility = "hidden";
             };
   popupFrame.appendChild(btn_node);  
 }
 
-function Setting_ClsBtn(){
-  document.getElementById("Popup").style.visibility = "hidden";
-//  document.getElementById("myPopup").style.visibility = "hidden";
-}
 
-function clearPopup(){
-  // delete recursively
-  var popup_main = document.getElementById("popupFrame");
-  if (popup_main.childNodes.length >1){
-    popup_main.removeChild(popup_main.childNodes[1]);
-    clearPopup();
-  }
-}
-
-function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-
-
-function topmenuselect(){
-  var select = document.getElementsByClassName("top-menu-ul");
-  if (select[0].style.marginTop != "0px") {
-    select[0].style.marginTop = "0px";
-    document.getElementById("list").style.marginTop = "50px";
-  } else {
-    select[0].style.marginTop = "-50px";
-    document.getElementById("list").style.marginTop = "0px";
-  }
-}
-
-function send_btn_Setting(dom) {
+function send_btn_UpdateAll_Popup(dom) {
   var str ="";
   var tr = dom.childNodes[1].childNodes[1];
   for (var i=0; i<(tr.childNodes.length);i++){
@@ -205,33 +252,15 @@ function send_btn_Setting(dom) {
       str += tr.childNodes[i].innerHTML+"-";
     }
   }
-//  getdata('setdb.cgi?'+str,topFunction());
   getdata('updatedb_all.cgi?'+str,topFunction());
 }
 
-function getdata(command,callback) {
-  var xmlhttp = null;
-  var cb = null;
-  xmlhttp=new XMLHttpRequest();
-  cb = callback;
-  
-  xmlhttp.onreadystatechange = function() {
-    if(xmlhttp.readyState == 4) {
-      if(cb)
-        //cb(xmlhttp.responseText);
-        alert(xmlhttp.responseText);
-      }
-    }
-  xmlhttp.open("GET",command,true);
-  xmlhttp.send(null);
-  }   
+//---------------------------------------------------------------//
+//----               Increase/Decrease Popup           ----------//
+//---------------------------------------------------------------//
 
-function change_Popup(dom,width,height){
+function incDec_Popup(dom,width,height){
   clearPopup();
-  var field = document.getElementById("Popup");
-  field.style.width="20%";
-  field.style.height="20%";
-  field.style.visibility = "visible";
 
   var table_node =  document.createElement("table");
   table_node.id="popup_tbl";
@@ -284,8 +313,11 @@ function change_Popup(dom,width,height){
   btn_node.onclick= function (e) {
                 send_btn_decinc(this.parentNode);
             };
+  btn_node.style.marginTop="0px";
   popupFrame.appendChild(btn_node);
-
+  var newWidth = document.getElementById("popup_tbl").clientWidth;
+  var newHeight = document.getElementById("popup_tbl").clientHeight;
+  SetMainPopup(newWidth,newHeight+30);
 }
 
 function inc(dom){
@@ -309,7 +341,7 @@ function send_btn_decinc(dom) {
 //  getdata('updatedb.cgi?'+str,topFunction());
 alert("TEST");
 }
-
+//--------------------------------------------------------------------------------------//
 
 </script>
 </html>

@@ -136,9 +136,7 @@ table tr:hover {background-color: #888;}
 }
 
 .Setting_popup {
-  position: absolute;
-  left: 18%;
-  top: 20%;
+  position: relative;
   margin: 0px;
   padding:20px;
   background-color:#595959;
@@ -164,17 +162,12 @@ table tr:hover {background-color: #888;}
 
 .popup {
   visibility: hidden;
-  position: relative;
+  position: absolute;
   display: inline-block;
-  margin: auto;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  width: 800px;
-  left: 23%;
-  height: 50%;
-  top: 20%;
   z-index:1;
   background-color:#c6c6c6;
   box-shadow: 10px 10px 5px grey;
@@ -186,7 +179,7 @@ table tr:hover {background-color: #888;}
 
 
 .popup .popuptext {
-  top: 40px;
+  top: 10px;
   z-index: 2;
 }
 
@@ -212,7 +205,7 @@ table tr:hover {background-color: #888;}
   border: 2px solid #595959;
   cursor: pointer;
   border-radius: 7px;
-  margin: 10px;
+  margin: 20px;
   float: right;
   font-family: Helvetica;
 }
