@@ -73,7 +73,7 @@ print qq$
 $;
 
 print $th_str;
-print "<th> <img width=\"20px\" src=\"wheel.svg\"> </th>";
+print "<th> <img width=\"20px\" src=\"wheel.svg\" onclick=\"Setting_Popup(this,600,500)\"> </th>";
 
 print "</tr>\n";
 
@@ -83,7 +83,21 @@ while(my @row = $sth2->fetchrow_array()) {
       if ($row[$i] eq "id") {
         print "<td id=\"td_$data->{$i}\">$row[$i]</td>";
       } else {
-        print "<td id=\"td_$data->{$i}\" onclick=\"incDec_Popup(this,80,100)\">$row[$i]</td>";
+        if ($data->{$i} eq "amount" || $data->{$i} eq "place" ){
+          print "<td id=\"td_$data->{$i}\" onclick=\"incDec_Popup(this,80,100)\">$row[$i]</td>";
+        } elsif ($data->{$i} eq "partnum"){
+          print "<td id=\"td_$data->{$i}\" onclick=\"text_Popup(this,100,80)\">$row[$i]</td>";
+        } elsif ($data->{$i} eq "type"){
+          print "<td id=\"td_$data->{$i}\" onclick=\"select_Popup(this,'type',100,80)\">$row[$i]</td>";
+        } elsif ($data->{$i} eq "value"){
+          print "<td id=\"td_$data->{$i}\" onclick=\"select_Popup(this,'value',100,80)\">$row[$i]</td>";
+        } elsif ($data->{$i} eq "package"){
+          print "<td id=\"td_$data->{$i}\" onclick=\"select_Popup(this,'package',100,80)\">$row[$i]</td>";
+        } elsif ($data->{$i} eq "price"){
+          print "<td id=\"td_$data->{$i}\" onclick=\"indec_money_Popup(this,'type',100,80)\">$row[$i]</td>";
+        } else {
+          print "<td id=\"td_$data->{$i}\" >$row[$i]</td>";
+        }
       }  
     }
 print "<td onclick=\"changeAll_Popup(this.parentNode)\"><img width=\"20px\"src=\"sett.svg\"></td>";
@@ -341,7 +355,171 @@ function send_btn_decinc(dom) {
 //  getdata('updatedb.cgi?'+str,topFunction());
 alert("TEST");
 }
+
 //--------------------------------------------------------------------------------------//
+//---------------------      Setting_Popup        --------------------------------------//
+//--------------------------------------------------------------------------------------//
+
+function Setting_Popup(dom,width,height){
+  clearPopup();
+
+  var table_node =  document.createElement("table");
+  table_node.id="popup_tbl";
+  table_node.className="UpDownTabl";
+  var tr_node = document.createElement("tr");
+  tr_node.className="UpDownTabl";
+
+  var td_node = document.createElement("td");
+  td_node.className="UpDownTabl";
+
+  var input = document.createElement("input");
+  input.style.width ="50px";
+  input.style.height="50px";
+  input.type="text";
+  input.value= dom.innerHTML;
+  input.style.textAlign="center";
+  td_node.appendChild(input);
+  td_node.rowSpan="2";
+
+  tr_node.appendChild(td_node);
+  var td_node2 = document.createElement("td");
+  td_node2.innerHTML='&#9650;';
+  td_node2.onclick= function (e) {
+                inc(this);
+            };
+  td_node2.className="UpDownTabl";
+
+  tr_node.appendChild(td_node2);
+
+  var tr_node2 = document.createElement("tr");
+  var td_node3 = document.createElement("td");
+  td_node3.innerHTML='&#9660;';
+  td_node3.onclick= function (e) {
+                dec(this);
+            };
+
+  td_node3.className="UpDownTabl";
+  
+  tr_node2.appendChild(td_node3);
+  tr_node2.className="UpDownTabl";
+ 
+  table_node.appendChild(tr_node);
+  table_node.appendChild(tr_node2);
+  popupFrame.appendChild(table_node);
+
+  var btn_node= document.createElement("input");
+  btn_node.type = "button";
+  btn_node.value= "change";
+  btn_node.className="SendBtn";
+  btn_node.onclick= function (e) {
+                send_btn_decinc(this.parentNode);
+            };
+  btn_node.style.marginTop="0px";
+  popupFrame.appendChild(btn_node);
+  //var newWidth = document.getElementById("popup_tbl").clientWidth;
+  //var newHeight = document.getElementById("popup_tbl").clientHeight;
+  //SetMainPopup(newWidth,newHeight+30);
+  SetMainPopup(width,height);
+}
+
+//--------------------------------------------------------------------------------------//
+//---------------------         Text_Popup        --------------------------------------//
+//--------------------------------------------------------------------------------------//
+
+function text_Popup(dom,width,height){
+  clearPopup();
+
+  var table_node =  document.createElement("table");
+  table_node.id="popup_tbl";
+  var tr_node = document.createElement("tr");
+  var td_node = document.createElement("td");
+  td_node.className="UpDownTabl";
+
+  var input = document.createElement("input");
+  input.style.width ="100%";
+  input.style.height="34px";
+  input.type="text";
+  input.style.fontSize="16";
+  input.value= dom.innerHTML;
+  input.style.textAlign="center";
+  td_node.appendChild(input);
+  tr_node.appendChild(td_node);
+  table_node.appendChild(tr_node);
+  popupFrame.appendChild(table_node);
+
+  var btn_node= document.createElement("input");
+  btn_node.type = "button";
+  btn_node.value= "change";
+  btn_node.className="SendBtn";
+  btn_node.onclick= function (e) {
+                send_btn_decinc(this.parentNode);
+            };
+  btn_node.style.marginTop="0px";
+  popupFrame.appendChild(btn_node);
+  //var newWidth = document.getElementById("popup_tbl").clientWidth;
+  //var newHeight = document.getElementById("popup_tbl").clientHeight;
+  //SetMainPopup(newWidth,newHeight+30);
+  SetMainPopup(width,height);
+}
+
+//--------------------------------------------------------------------------------------//
+//---------------------         Select_Popup        --------------------------------------//
+//--------------------------------------------------------------------------------------//
+
+function select_Popup(dom,type,width,height){
+  clearPopup();
+
+  // Call getScript to get all kinds of values for a type.
+  // returns all kinds which will be put here...
+
+  var table_node =  document.createElement("table");
+  table_node.id="popup_tbl";
+  table_node.style.width="100%";
+  var tr_node = document.createElement("tr");
+  var td_node = document.createElement("td");
+  td_node.className="UpDownTabl";
+  td_node.style.width="100%";
+
+  var sel = document.createElement("SELECT");
+  sel.style.width ="100%";
+  sel.style.height="38px";
+
+// loop over all returned kinds/values
+  var opt = document.createElement("OPTION");
+  opt.value= dom.innerHTML;
+  opt.innerHTML= dom.innerHTML;
+  sel.appendChild(opt);
+
+  opt = document.createElement("OPTION");
+  opt.value= "TEST";
+  opt.innerHTML= "TEST";
+  sel.appendChild(opt);
+
+// end loop
+
+  sel.style.textAlign="center";
+  td_node.appendChild(sel);
+  tr_node.appendChild(td_node);
+  table_node.appendChild(tr_node);
+  popupFrame.appendChild(table_node);
+
+  var btn_node= document.createElement("input");
+  btn_node.type = "button";
+  btn_node.value= "change";
+  btn_node.className ="SendBtn";
+  btn_node.onclick = function (e) {
+                send_btn_decinc(this.parentNode);
+            };
+  btn_node.style.marginTop="0px";
+  popupFrame.appendChild(btn_node);
+  //var newWidth = document.getElementById("popup_tbl").clientWidth;
+  //var newHeight = document.getElementById("popup_tbl").clientHeight;
+  //SetMainPopup(newWidth,newHeight+30);
+  SetMainPopup(width,height);
+}
+
+
+
 
 </script>
 </html>
