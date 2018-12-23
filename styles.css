@@ -1,0 +1,228 @@
+body {
+    margin:0;
+    font-family: Helvetica;
+    }
+
+div.listing {
+  position: absolute;
+  background-color: #c4c4c4;
+  left    : 150px;
+  top     : 70px;
+  padding : 0px;
+  margin  : 0px;
+}
+div.menu{
+  position: absolute;
+  height  : 50px;
+  width   :99.5%;
+  top     :  0px;
+  left    :  0px;
+  margin  :  0px;
+  padding :  0px;
+  background-color: #c4c4c4;
+}
+
+h4 {
+  position: absolute;
+  top     :0px;
+  padding : 15px;
+  margin  : 0px;
+}
+
+table {
+ font-family : Helvetica;
+ border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #595959;
+  color: white;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+
+table tr:hover {background-color: #888;}
+
+#td_id{
+}
+
+#th_id{
+}
+
+.top-menu-ul {
+    list-style-type: none;
+    margin-top: -50px;
+    padding: 0;
+    overflow: hidden;
+    background-color: #c6c6c6;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    z-index: 98;
+    transition: margin-top .5s;
+}
+
+.top-menu {
+    float: left;
+    width: 200px;
+}
+
+.top-menu-select {
+    position: fixed;
+    right: 20px;
+    width: 50px;
+    top: 0px;
+    z-index:99;
+}
+
+.top-menu a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    height: 50px;
+    transition: 0.3s;
+}
+
+.top-menu-select a{
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 5px 16px;
+    text-decoration: none;
+    font-size: 170%;
+    font-weight: bold;
+    height: 50px;
+}
+
+.top-menu a:hover:not(.active-top) {
+    background-color: #a5a5a5;
+}
+
+.active-top {
+    background-color: #595959;
+    color: #595959;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  font-size: 12px;
+  border: none;
+  outline: none;
+  background-color: #a5a5a5;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+#myBtn:hover {
+  background-color: #555;
+}
+
+.Setting_popup {
+  position: absolute;
+  left: 18%;
+  top: 20%;
+  margin: 0px;
+  padding:20px;
+  background-color:#595959;
+  z-index:1;
+}
+
+.close_btn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-right: 8px;
+  font-size: 36px;
+  line-height: 32px;
+  cursor: pointer;
+  top:-40px;
+}
+
+.close_btn:hover{
+  color: red;
+}
+
+
+.popup {
+  visibility: hidden;
+  position: relative;
+  display: inline-block;
+  margin: auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 800px;
+  left: 23%;
+  height: 50%;
+  top: 20%;
+  z-index:1;
+  background-color:#c6c6c6;
+  box-shadow: 10px 10px 5px grey;
+  border-width: 2px;
+  border-color: #595959;
+  border-style: solid;
+  border-radius: 5px;
+}
+
+
+.popup .popuptext {
+  top: 40px;
+  z-index: 2;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+.sendBtn{
+  border: 2px solid #595959;
+  cursor: pointer;
+  border-radius: 7px;
+  margin: 10px;
+  float: right;
+  font-family: Helvetica;
+}
+
+.upDownTabl{
+  background-color:#c6c6c6;
+  border: 0px;
+}
+
+.upDownTabl:hover{
+  background-color:#c6c6c6; 
+}
+
