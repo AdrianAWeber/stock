@@ -184,7 +184,7 @@ function topmenuselect(){
   var select = document.getElementsByClassName("top-menu-ul");
   if (select[0].style.marginTop != "0px") {
     select[0].style.marginTop = "0px";
-    document.getElementById("list").style.marginTop = "50px";
+    document.getElementById("list").style.marginTop = "0px";
   } else {
     select[0].style.marginTop = "-50px";
     document.getElementById("list").style.marginTop = "0px";
@@ -218,6 +218,12 @@ function SetMainPopup(width,height) {
   field.style.height = parseInt(height)+35;
   field.style.left   = ((clientW - parseInt(field.style.width.slice(0,-2)))/2) +"px";
   field.style.top    = ((parseInt(clientH) - parseInt(field.style.height.slice(0,-2)))/3) +"px";
+  var topMenuHeight  = parseInt(document.getElementsByClassName("top-menu-ul")[0].style.marginTop) + parseInt(document.getElementsByClassName("top-menu-ul")[0].offsetHeight);
+
+  if ( parseInt(field.style.top.slice(0,-2)) < topMenuHeight ){
+    field.style.top = "50px";
+  } 
+
   field.style.visibility = "visible";
 }
 
