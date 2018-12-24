@@ -61,9 +61,10 @@ print qq$
 </div>
 
 <div class="popup" id="Popup">
-  <div style="background-color:#595959; height:35px;">  <span class="close_btn" onclick="ClsBtn_Popup()">&times</span></div>
-  <div id="popupFrame" style="position: relative;"> 
-  </div>
+  <div id="Popupheader" style="background-color:#595959; height:35px;">  <span class="close_btn" onclick="ClsBtn_Popup()">&times</span></div>
+  <div id="popupFrame" style="position: relative;">   </div>
+  <div id="scaleBL" style="position:absolute;border-radius:5px; background-color:#c6c6c6;z-index:99;width:7px;height:7px;bottom:0px;cursor:ne-resize;"></div>
+  <div id="scaleBR" style="position:absolute;border-radius:5px; right:0px; background-color:#c6c6c6;z-index:99;width:7px;height:7px;bottom:0px;cursor:nw-resize;"></div>
 </div>
 
 <div id="list" class="listing" > 
@@ -116,6 +117,11 @@ print qq$
 document.getElementsByClassName("top-menu-ul")[0].style.marginTop = "0px";
 
 window.onscroll = function() {scrollFunction()};
+
+dragElement(document.getElementById("Popup"));
+
+scaleElement(document.getElementById("scaleBL"));
+scaleElement(document.getElementById("scaleBR"));
 
 //--------------------------------------------------------------------------//
 //---------------                Basic                   -------------------//
@@ -518,8 +524,99 @@ function select_Popup(dom,type,width,height){
   SetMainPopup(width,height);
 }
 
+//---------------------------------------------------------------------//
+//---------------        Dragability of Popup      --------------------//
+//---------------------------------------------------------------------//
 
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
 
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+//---------------------------------------------------------------------//
+//---------------         Scaling of Popup         --------------------//
+//---------------------------------------------------------------------//
+
+function scaleElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id)) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id).onmousedown = scaleMouseDown;
+  }
+
+  function scaleMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeScaleElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementScale;
+  }
+
+  function elementScale(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+   
+    if ( pos1 > 2 || pos2 > 2 || pos1 < -2 || pos2 < -2){
+      if (elmnt.id.slice(-1) == "L"){
+        elmnt.parentNode.style.left = (elmnt.parentNode.offsetLeft - pos1) + "px";
+      }
+      elmnt.parentNode.style.width = (elmnt.parentNode.offsetWidth - pos1) + "px";
+      elmnt.parentNode.style.height = (elmnt.parentNode.offsetHeight - pos2) + "px";
+    }
+  }
+
+  function closeScaleElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+
+}
 
 </script>
 </html>
