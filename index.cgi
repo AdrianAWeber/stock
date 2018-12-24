@@ -89,9 +89,9 @@ while(my @row = $sth2->fetchrow_array()) {
         } elsif ($data->{$i} eq "partnum"){
           print "<td id=\"td_$data->{$i}\" onclick=\"text_Popup(this,100,80)\">$row[$i]</td>";
         } elsif ($data->{$i} eq "type"){
-          print "<td id=\"td_$data->{$i}\" onclick=\"select_Popup(this,'type',100,80)\">$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" onclick=\"getdata_2('getSelection.cgi',select_Popup,this,'type',100,80)\">$row[$i]</td>";
         } elsif ($data->{$i} eq "value"){
-          print "<td id=\"td_$data->{$i}\" onclick=\"select_Popup(this,'value',100,80)\">$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" onclick=\"getdata_2('getSelection.cgi',select_Popup,this,'value',100,80)\">$row[$i]</td>";
         } elsif ($data->{$i} eq "package"){
           print "<td id=\"td_$data->{$i}\" onclick=\"select_Popup(this,'package',100,80)\">$row[$i]</td>";
         } elsif ($data->{$i} eq "price"){
@@ -114,6 +114,9 @@ print qq$
   </body>
 
 <script>
+var data_type;
+var data_values;
+
 document.getElementsByClassName("top-menu-ul")[0].style.marginTop = "0px";
 
 window.onscroll = function() {scrollFunction()};
@@ -122,6 +125,7 @@ dragElement(document.getElementById("Popup"));
 
 scaleElement(document.getElementById("scaleBL"));
 scaleElement(document.getElementById("scaleBR"));
+
 
 //--------------------------------------------------------------------------//
 //---------------                Basic                   -------------------//
@@ -143,14 +147,33 @@ function getdata(command,callback) {
   
   xmlhttp.onreadystatechange = function() {
     if(xmlhttp.readyState == 4) {
-      if(cb)
-        //cb(xmlhttp.responseText);
-        alert(xmlhttp.responseText);
+      if(cb) alert(xmlhttp.responseText);
       }
-    }
+  }
   xmlhttp.open("GET",command,true);
   xmlhttp.send(null);
   }   
+
+function getdata_2(command,callback,a,b,c,d) {
+  var xmlhttp = null;
+  var cb = null;  
+  command = command+"?"+b;
+  if (b == 'value') {
+    var type = a.parentNode.childNodes[5].innerHTML; // get type of field "type"
+    command = command +"-"+type;
+  }
+//  alert(command);
+  xmlhttp=new XMLHttpRequest();
+  cb = callback;  
+  xmlhttp.onreadystatechange = function() {
+    if(xmlhttp.readyState == 4) {
+         cb(xmlhttp.responseText,a,b,c,d);
+    }
+  }
+  xmlhttp.open("GET",command,true);
+  xmlhttp.send(null);
+}   
+
 
 function topFunction() {
     document.body.scrollTop = 0;
@@ -211,6 +234,7 @@ function changeAll_Popup(dom) {
   var popupFrame = document.getElementById("popupFrame");
   var table_node =  document.createElement("table");
   table_node.id="popup_tbl";
+  table_node.width="96%";
   var tr_node =  document.createElement("tr");
 
   for (var i=1; i<(main_tbl_head.childNodes.length - 1);i++){
@@ -225,10 +249,15 @@ function changeAll_Popup(dom) {
     var td_node = document.createElement("td");
 
     //insert input fields in rows. Not in case of id.
-    if (main_tbl_head.childNodes[i].innerHTML !== "id") {
+    if (main_tbl_head.childNodes[i].innerHTML == "partnum" || main_tbl_head.childNodes[i].innerHTML == "amount" || main_tbl_head.childNodes[i].innerHTML == "place"
+        ||main_tbl_head.childNodes[i].innerHTML == "price") {
       var input = document.createElement("input");
-      input.style.width="50px";
-      input.type="text";
+      if (main_tbl_head.childNodes[i].innerHTML == "amount" || main_tbl_head.childNodes[i].innerHTML == "place") {
+        input.type="number";
+      } else {
+	input.type="text";
+      }
+      input.style.width="100%";
       input.value= dom.childNodes[i].innerHTML;      
       td_node.appendChild(input);
     } else {
@@ -472,9 +501,8 @@ function text_Popup(dom,width,height){
 //---------------------         Select_Popup        --------------------------------------//
 //--------------------------------------------------------------------------------------//
 
-function select_Popup(dom,type,width,height){
+function select_Popup(d,dom,type,width,height){
   clearPopup();
-
   // Call getScript to get all kinds of values for a type.
   // returns all kinds which will be put here...
 
@@ -489,19 +517,20 @@ function select_Popup(dom,type,width,height){
   var sel = document.createElement("SELECT");
   sel.style.width ="100%";
   sel.style.height="38px";
-
-// loop over all returned kinds/values
-  var opt = document.createElement("OPTION");
-  opt.value= dom.innerHTML;
-  opt.innerHTML= dom.innerHTML;
-  sel.appendChild(opt);
-
-  opt = document.createElement("OPTION");
-  opt.value= "TEST";
-  opt.innerHTML= "TEST";
-  sel.appendChild(opt);
-
-// end loop
+  var res="";
+  var data;
+  try { 
+    data = JSON.parse(d);
+    var datasize = data.length;
+    for (var i in data){
+      var opt = document.createElement("OPTION");
+      opt.value= i;
+      opt.innerHTML= i;
+      sel.appendChild(opt);
+    }
+  }
+  catch (e){
+  }  
 
   sel.style.textAlign="center";
   td_node.appendChild(sel);
