@@ -61,7 +61,7 @@ print qq$
 </div>
 
 <div class="popup" id="Popup">
-  <div id="Popupheader" style="background-color:#595959; height:35px;">  <span class="close_btn" onclick="ClsBtn_Popup()">&times</span></div>
+  <div id="Popupheader" style="background-color:#595959; height:35px;"><span id="popup_name_field" class="popup_name_field">TEST_NAME</span>  <span class="close_btn" onclick="ClsBtn_Popup()">&times</span></div>
   <div id="popupFrame" style="position: relative;">   </div>
   <div id="scaleBL" style="position:absolute;border-radius:5px; background-color:#c6c6c6;z-index:99;width:7px;height:7px;bottom:0px;cursor:ne-resize;"></div>
   <div id="scaleBR" style="position:absolute;border-radius:5px; right:0px; background-color:#c6c6c6;z-index:99;width:7px;height:7px;bottom:0px;cursor:nw-resize;"></div>
@@ -209,7 +209,7 @@ function ClsBtn_Popup(){
   document.getElementById("Popup").style.visibility = "hidden";
 }
 
-function SetMainPopup(width,height) {
+function SetMainPopup(width,height,name) {
   var field   = document.getElementById("Popup");
   var clientW = document.body.clientWidth;
   var clientH = document.body.clientHeight;
@@ -224,6 +224,17 @@ function SetMainPopup(width,height) {
     field.style.top = "50px";
   } 
 
+  var name_field = document.getElementById("popup_name_field");
+  var name_size = name.length;
+//  var popupName = document.getElementById("popup_name_field").offsetWidth;
+  var popupClose= document.getElementsByClassName("close_Btn")[0].offsetLeft;
+//  alert(name_size*13 +"<"+ popupClose);
+  if (name_size*13 < popupClose) {
+    name_field.innerHTML=name;
+  } else {
+    name_field.innerHTML=name.slice(0,popupClose/13-2)+"...";
+  }
+ 
   field.style.visibility = "visible";
 }
 
@@ -233,7 +244,7 @@ function SetMainPopup(width,height) {
 
 function changeAll_Popup(dom) {
   clearPopup();
-  SetMainPopup("600","130");
+  SetMainPopup("600","130","Update");
 
   var id= dom.id.slice(3);
   var main_tbl_head = document.getElementById("main_tbl_head");
@@ -372,7 +383,7 @@ function incDec_Popup(dom,width,height){
   popupFrame.appendChild(btn_node);
   var newWidth = document.getElementById("popup_tbl").clientWidth;
   var newHeight = document.getElementById("popup_tbl").clientHeight;
-  SetMainPopup(newWidth,newHeight+30);
+  SetMainPopup(newWidth,newHeight+30,dom.id.slice(3));
 }
 
 function inc(dom){
@@ -404,64 +415,79 @@ alert("TEST");
 function Setting_Popup(dom,width,height){
   clearPopup();
 
-  var table_node =  document.createElement("table");
-  table_node.id="popup_tbl";
-  table_node.className="UpDownTabl";
-  var tr_node = document.createElement("tr");
-  tr_node.className="UpDownTabl";
+  var div_node_Frame =  document.createElement("div");
+  div_node_Frame.className="cardNav";
 
-  var td_node = document.createElement("td");
-  td_node.className="UpDownTabl";
+  var div_node_outer =  document.createElement("div");
+  div_node_outer.className="cardNav_Top_outer";
 
-  var input = document.createElement("input");
-  input.style.width ="50px";
-  input.style.height="50px";
-  input.type="text";
-  input.value= dom.innerHTML;
-  input.style.textAlign="center";
-  td_node.appendChild(input);
-  td_node.rowSpan="2";
+  var div_node_main =  document.createElement("div");
+  div_node_main.className="cardNav_main";
+  div_node_main.id="cardNav_main";
+  div_node_main.innerHTML="JHJKDK"
+  div_node_main.style.backgroundColor="#aaa";
 
-  tr_node.appendChild(td_node);
-  var td_node2 = document.createElement("td");
-  td_node2.innerHTML='&#9650;';
-  td_node2.onclick= function (e) {
-                inc(this);
+  var div_node_Top_PlaceHolder =  document.createElement("div");
+  div_node_Top_PlaceHolder.className="cardNav_Top_placeHolder";
+  div_node_outer.appendChild(div_node_Top_PlaceHolder);
+
+  //-------- Top Row  -----------//
+  var div_node_Top =  document.createElement("div");
+  div_node_Top.className="cardNav_Top_active";
+  div_node_Top.onclick= function (e) {
+                cardNavSelect(this);
             };
-  td_node2.className="UpDownTabl";
+  div_node_Top.style.backgroundColor="#aaa";
+  div_node_Top.innerHTML="Add Entry";
+  div_node_outer.appendChild(div_node_Top);
 
-  tr_node.appendChild(td_node2);
-
-  var tr_node2 = document.createElement("tr");
-  var td_node3 = document.createElement("td");
-  td_node3.innerHTML='&#9660;';
-  td_node3.onclick= function (e) {
-                dec(this);
+  div_node_Top =  document.createElement("div");
+  div_node_Top.className="cardNav_Top_inner";
+  div_node_Top.onclick= function (e) {
+                cardNavSelect(this);
             };
+  div_node_Top.style.backgroundColor="#ddd";
+  div_node_Top.innerHTML="Add Type";
+  div_node_outer.appendChild(div_node_Top);
 
-  td_node3.className="UpDownTabl";
-  
-  tr_node2.appendChild(td_node3);
-  tr_node2.className="UpDownTabl";
- 
-  table_node.appendChild(tr_node);
-  table_node.appendChild(tr_node2);
-  popupFrame.appendChild(table_node);
-
-  var btn_node= document.createElement("input");
-  btn_node.type = "button";
-  btn_node.value= "change";
-  btn_node.className="SendBtn";
-  btn_node.onclick= function (e) {
-                send_btn_decinc(this.parentNode);
+  div_node_Top =  document.createElement("div");
+  div_node_Top.className="cardNav_Top_inner";
+  div_node_Top.onclick= function (e) {
+                cardNavSelect(this);
             };
-  btn_node.style.marginTop="0px";
-  popupFrame.appendChild(btn_node);
-  //var newWidth = document.getElementById("popup_tbl").clientWidth;
-  //var newHeight = document.getElementById("popup_tbl").clientHeight;
-  //SetMainPopup(newWidth,newHeight+30);
-  SetMainPopup(width,height);
+  div_node_Top.style.backgroundColor="#999";
+  div_node_Top.innerHTML="Add Value";
+  div_node_outer.appendChild(div_node_Top);
+  //--------END Top Row  -----------//
+
+  div_node_Frame.appendChild(div_node_outer);
+  div_node_Frame.appendChild(div_node_main);
+  popupFrame.appendChild(div_node_Frame);
+
+
+ /* <div class="cardNav">
+      <div class="cardNav_Top_outer">
+      <div class="cardNav_Top_placeHolder"></div>
+      <div class="cardNav_Top_inner"  style="background-color: #aaa;" onclick="cardNavSelect(this)">Add Entry</div>
+      <div class="cardNav_Top_active" style="background-color: #ddd;" onclick="cardNavSelect(this)">Add Type</div>
+      <div class="cardNav_Top_inner"  style="background-color: #777;" onclick="cardNavSelect(this)">Add Value</div>
+    </div>
+    <div id="cardNav_main" class="cardNav_main">
+      najklsefkleasjklesjfkl
+    </div>
+  </div>
+*/
+
+  SetMainPopup(width,height,"Settings");
 }
+
+ function cardNavSelect(dom){
+    var color = dom.style.backgroundColor;
+    var oldWin = document.getElementsByClassName("cardNav_Top_active")[0];
+    oldWin.className="cardNav_Top_inner";
+    dom.className="cardNav_Top_active";
+    document.getElementsByClassName("cardNav_main")[0].style.backgroundColor = color;
+ }
 
 //--------------------------------------------------------------------------------------//
 //---------------------         Text_Popup        --------------------------------------//
@@ -500,7 +526,7 @@ function text_Popup(dom,width,height){
   //var newWidth = document.getElementById("popup_tbl").clientWidth;
   //var newHeight = document.getElementById("popup_tbl").clientHeight;
   //SetMainPopup(newWidth,newHeight+30);
-  SetMainPopup(width,height);
+  SetMainPopup(width,height,dom.id.slice(3));
 }
 
 //--------------------------------------------------------------------------------------//
@@ -556,7 +582,7 @@ function select_Popup(d,dom,type,width,height){
   //var newWidth = document.getElementById("popup_tbl").clientWidth;
   //var newHeight = document.getElementById("popup_tbl").clientHeight;
   //SetMainPopup(newWidth,newHeight+30);
-  SetMainPopup(width,height);
+  SetMainPopup(width,height,dom.id.slice(3));
 }
 
 //---------------------------------------------------------------------//

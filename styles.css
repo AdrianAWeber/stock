@@ -159,6 +159,15 @@ table tr:hover {background-color: #888;}
   color: red;
 }
 
+.popup_name_field{
+  margin-left: 10px;
+  color: white;
+  font-weight: bold;
+  float: left;
+  font-size: 14px;
+  line-height: 32px;
+  top:-40px;
+}
 
 .popup {
   visibility: hidden;
@@ -219,3 +228,75 @@ table tr:hover {background-color: #888;}
   background-color:#c6c6c6; 
 }
 
+ .cardNav {
+   height: 600px;
+   width : 94%;
+   margin: auto;
+   margin-top: 20px;
+ }
+ 
+ .cardNav_Top_outer {
+   position: relative;
+   height  : 30px;
+   margin  : 0;
+   z-index : 3;
+ }
+ 
+ .cardNav_Top_placeHolder {
+   position:relative;
+   float:left;
+   border:0px;
+   margin:0;
+   height:70%;
+   top:25%;
+   width:10px;
+ }
+ 
+ .cardNav_Top_inner {
+   position:relative;
+   border-top-left-radius:3px;
+   border-top-right-radius:3px;
+   float:left;
+   border:1px solid black;
+   margin:0;
+   margin-left:2px;
+   margin-right:2px;
+   padding-left: 3px;
+   padding-right:3px;
+   height:70%;
+   top:25%;
+ }
+ 
+  .cardNav_Top_inner:hover {
+    cursor: pointer;
+    height: 90%;
+    top: 5%;
+    transform: 0.2s;
+ }
+ 
+ .cardNav_Top_active {
+   position:relative;
+   float:left;
+   border:1px solid black;
+   border-top-left-radius:3px;
+   border-top-right-radius:3px;
+   border-bottom:0px;
+   margin:0;
+   margin-left:2px;
+   margin-right:2px;
+   padding-left: 3px;
+   padding-right:3px;
+   height:100%;
+   top:0%;
+ }
+ 
+ .cardNav_main{
+    position:relative;
+    border:1px solid black;
+    border-radius: 5px;
+    height:400px;
+    margin:0;
+    z-index:2;
+    background-color: #ddd;
+    padding: 10px;
+  }
