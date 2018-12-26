@@ -295,8 +295,116 @@ table tr:hover {background-color: #888;}
     border:1px solid black;
     border-radius: 5px;
     height:400px;
-    margin:0;
+    margin:0px;
     z-index:2;
     background-color: #ddd;
     padding: 10px;
   }
+
+
+.switchBtn {
+  position: relative;
+  float: right;
+  right: 10px;
+  top: -10px;
+  display: inline-block;
+  width: 64px;
+  height: 28px;
+  z-index: 99;
+  overflow: hidden;
+}
+
+.switchBtn input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #595959;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #595959;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #595959;
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 20px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.slider-text {
+  position: absolute;
+  width: 200%;
+  margin-top:-1px;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider-text:before, .slider-text:after {
+  width: 40%;
+  height: 30px;
+  padding: 0;
+  line-height: 30px;
+  font-size: 14px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider-text:after {
+  content: "Del";
+  padding-right: 10px;
+  padding-left:10px;
+  color: #999999;
+  text-align: right;
+  margin-left: 20px;
+}
+
+.slider-text:before {
+  content: "Add";
+  padding-left: 10px;
+  color: #FFFFFF;
+  margin-left: -53px;
+}
+
+input:checked ~ .slider-text:before{
+ margin-left: -24px;
+}
+
+input:checked ~ .slider:before{
+  -webkit-transform: translateX(36px);
+  -ms-transform: translateX(36px);
+  transform: translateX(36px);
+  background-color: white;
+}

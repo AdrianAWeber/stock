@@ -206,6 +206,7 @@ function clearPopup(){
 }
 
 function ClsBtn_Popup(){
+  document.getElementById("switchBtn_Slider").style.transitionDuration = ".0s";
   document.getElementById("Popup").style.visibility = "hidden";
 }
 
@@ -415,6 +416,32 @@ alert("TEST");
 function Setting_Popup(dom,width,height){
   clearPopup();
 
+  //  <div id="slideBtn" class="slideBtn"><span>ON</span></div>
+//<input type="checkbox" checked>
+  
+  var inp_node_slideBtn =  document.createElement("input");
+  inp_node_slideBtn.type="checkbox";
+  inp_node_slideBtn.id="inp_SwitchBtn";
+  inp_node_slideBtn.checked="TRUE";
+  inp_node_slideBtn.onclick= function (e) {
+                  AddDel_Fctn(this);
+            };
+  var div_node_slideBtn =  document.createElement("label");
+  div_node_slideBtn.id = "switchBtn";
+  div_node_slideBtn.className = "switchBtn";
+  var span_node_slideBtn =  document.createElement("span");
+  span_node_slideBtn.className="slider round";
+  span_node_slideBtn.id="switchBtn_Slider";
+
+  var spanInner = document.createElement("span");
+  spanInner.className="slider-text";
+
+  div_node_slideBtn.appendChild(inp_node_slideBtn);
+  div_node_slideBtn.appendChild(span_node_slideBtn);
+  div_node_slideBtn.appendChild(spanInner);
+  popupFrame.appendChild(div_node_slideBtn);
+  //--------------------------//
+
   var div_node_Frame =  document.createElement("div");
   div_node_Frame.className="cardNav";
 
@@ -481,13 +508,23 @@ function Setting_Popup(dom,width,height){
   SetMainPopup(width,height,"Settings");
 }
 
- function cardNavSelect(dom){
-    var color = dom.style.backgroundColor;
-    var oldWin = document.getElementsByClassName("cardNav_Top_active")[0];
-    oldWin.className="cardNav_Top_inner";
-    dom.className="cardNav_Top_active";
-    document.getElementsByClassName("cardNav_main")[0].style.backgroundColor = color;
- }
+function cardNavSelect(dom){
+  var color = dom.style.backgroundColor;
+  var oldWin = document.getElementsByClassName("cardNav_Top_active")[0];
+  oldWin.className="cardNav_Top_inner";
+  dom.className="cardNav_Top_active";
+  document.getElementsByClassName("cardNav_main")[0].style.backgroundColor = color;
+}
+
+function AddDel_Fctn(dom){
+  var status = dom.checked;
+  if (status == true){
+    status = "Add";
+  } else {
+    status = "Del";
+  }
+  alert(status);
+}
 
 //--------------------------------------------------------------------------------------//
 //---------------------         Text_Popup        --------------------------------------//
