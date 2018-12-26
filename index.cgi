@@ -540,6 +540,7 @@ function AddDel_Fctn(dom){
   }
 
   var topInnerActiv = document.getElementsByClassName("cardNav_Top_active")[0];
+  var name="";
   if ( topInnerActiv.innerHTML.slice(0,3) === "Add")
   { //normal Window; not special;
     topInnerActiv.innerHTML= status+topInnerActiv.innerHTML.slice(3);
@@ -560,7 +561,64 @@ function CreateMainCard(activeCard){
 
   var dom = document.getElementById("cardNav_main");
   dom.innerHTML = activeCard.innerHTML;
+// values_MainFrame(d,dom);  //ToDO
+  if (activeCard.innerHTML.slice(4) === "Value"){
+    getdata_2('getSelection.cgi',values_MainFrame,this,'type',100,80);
+  }
 }
+
+function values_MainFrame(d,dom,w,h){
+//  clearPopup();
+  // Call getScript to get all kinds of values for a type.
+  // returns all kinds which will be put here...
+
+  var table_node =  document.createElement("table");
+  table_node.id="popup_tbl";
+  table_node.style.width="60%";
+  var tr_node = document.createElement("tr");
+  var td_node = document.createElement("td");
+  td_node.className="UpDownTabl";
+  td_node.style.width="100%";
+
+  var sel = document.createElement("SELECT");
+  sel.style.width ="100%";
+  sel.style.height="38px";
+  var res="";
+  var data;
+  try { 
+    data = JSON.parse(d);
+    var datasize = data.length;
+    for (var i in data){
+      var opt = document.createElement("OPTION");
+      opt.value= i;
+      opt.innerHTML= i;
+      sel.appendChild(opt);
+    }
+  }
+  catch (e){
+  }  
+
+  sel.style.textAlign="center";
+  td_node.appendChild(sel);
+  tr_node.appendChild(td_node);
+  table_node.appendChild(tr_node);
+  document.getElementById("cardNav_main").appendChild(table_node);
+
+  var btn_node= document.createElement("input");
+  btn_node.type = "button";
+  btn_node.value= "change";
+  btn_node.className ="SendBtn";
+  btn_node.onclick = function (e) {
+                send_btn_decinc(this.parentNode);
+            };
+  btn_node.style.marginTop="0px";
+  document.getElementById("cardNav_main").appendChild(btn_node);
+  //var newWidth = document.getElementById("popup_tbl").clientWidth;
+  //var newHeight = document.getElementById("popup_tbl").clientHeight;
+  //SetMainPopup(newWidth,newHeight+30);
+  
+}
+
 
 //--------------------------------------------------------------------------------------//
 //---------------------         Text_Popup        --------------------------------------//
