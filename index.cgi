@@ -206,7 +206,7 @@ function clearPopup(){
 }
 
 function ClsBtn_Popup(){
-  document.getElementById("switchBtn_Slider").style.transitionDuration = ".0s";
+  try {document.getElementById("switchBtn_Slider").style.transitionDuration = ".0s";} catch (e){}
   document.getElementById("Popup").style.visibility = "hidden";
 }
 
