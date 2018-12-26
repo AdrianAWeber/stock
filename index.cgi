@@ -504,7 +504,8 @@ function Setting_Popup(dom,width,height){
     </div>
   </div>
 */
-
+  var activeCard = document.getElementsByClassName("cardNav_Top_active")[0];
+  CreateMainCard(activeCard);
   SetMainPopup(width,height,"Settings");
 }
 
@@ -513,7 +514,10 @@ function cardNavSelect(dom){
   var oldWin = document.getElementsByClassName("cardNav_Top_active")[0];
   oldWin.className="cardNav_Top_inner";
   dom.className="cardNav_Top_active";
-  document.getElementsByClassName("cardNav_main")[0].style.backgroundColor = color;
+  var newdom =  document.getElementsByClassName("cardNav_main")[0];
+  newdom.style.backgroundColor = color;
+
+  CreateMainCard(dom);
 }
 
 function AddDel_Fctn(dom){
@@ -521,9 +525,41 @@ function AddDel_Fctn(dom){
   if (status == true){
     status = "Add";
   } else {
+    status = "Delete";
+  }
+  var topInner = document.getElementsByClassName("cardNav_Top_inner");
+  var topInnerLength = topInner.length;
+  for (var i=0;i<topInnerLength;i++) {
+    //change name of card accord. to slideBtn;
+    if ( topInner[i].innerHTML.slice(0,3) == "Add")
+    { //normal Window; not special;
+      topInner[i].innerHTML= status+topInner[i].innerHTML.slice(3);
+    } else if ( topInner[i].innerHTML.slice(0,6) == "Delete") {
+      topInner[i].innerHTML= status+topInner[i].innerHTML.slice(6);
+    }
+  }
+
+  var topInnerActiv = document.getElementsByClassName("cardNav_Top_active")[0];
+  if ( topInnerActiv.innerHTML.slice(0,3) === "Add")
+  { //normal Window; not special;
+    topInnerActiv.innerHTML= status+topInnerActiv.innerHTML.slice(3);
+  } else if ( topInnerActiv.innerHTML.slice(0,6) === "Delete") {
+    topInnerActiv.innerHTML= status+topInnerActiv.innerHTML.slice(6);
+  }
+  
+  CreateMainCard(topInnerActiv);
+}
+
+function CreateMainCard(activeCard){
+  var status = document.getElementById("inp_SwitchBtn").checked;
+  if (status == true){
+    status = "Add";
+  } else {
     status = "Del";
   }
-  alert(status);
+
+  var dom = document.getElementById("cardNav_main");
+  dom.innerHTML = activeCard.innerHTML;
 }
 
 //--------------------------------------------------------------------------------------//

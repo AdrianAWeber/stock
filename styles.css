@@ -312,6 +312,7 @@ table tr:hover {background-color: #888;}
   height: 28px;
   z-index: 99;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .switchBtn input { 
