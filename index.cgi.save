@@ -156,7 +156,7 @@ function getdata(command,callback) {
   xmlhttp.send(null);
   }   
 
-function getdata_2(command,callback,a,b,status,c,d) {
+function getdata_2(command,callback,a,b,c,d) {
   var xmlhttp = null;
   var cb = null;  
   if (b){
@@ -172,7 +172,7 @@ function getdata_2(command,callback,a,b,status,c,d) {
   xmlhttp.onreadystatechange = function() {
     if(xmlhttp.readyState == 4) {
       if (cb){
-        cb(xmlhttp.responseText,a,b,status,c,d);
+        cb(xmlhttp.responseText,a,b,c,d);
       }
     }
   }
@@ -229,10 +229,7 @@ function clearPopup(id){
 }
 
 function ClsBtn_Popup(){
-  try {
-    document.getElementById("switchBtn_Slider").style.transitionDuration = ".0s";
-    document.getElementsByClassName("slider-text")[0].style.transitionDuration = ".0s";
-  } catch (e){}
+  try {document.getElementById("switchBtn_Slider").style.transitionDuration = ".0s";} catch (e){}
   document.getElementById("Popup").style.visibility = "hidden";
 }
 
@@ -492,7 +489,6 @@ function Setting_Popup(dom,width,height){
             };
   div_node_Top.style.backgroundColor="#aaa";
   div_node_Top.innerHTML="Add Entry";
-  div_node_Top.id="cardNav_Top_inner_Entry";
   div_node_outer.appendChild(div_node_Top);
 
   div_node_Top =  document.createElement("div");
@@ -502,7 +498,6 @@ function Setting_Popup(dom,width,height){
             };
   div_node_Top.style.backgroundColor="#ddd";
   div_node_Top.innerHTML="Add Type";
-  div_node_Top.id="cardNav_Top_inner_Type";
   div_node_outer.appendChild(div_node_Top);
 
   div_node_Top =  document.createElement("div");
@@ -512,7 +507,6 @@ function Setting_Popup(dom,width,height){
             };
   div_node_Top.style.backgroundColor="#999";
   div_node_Top.innerHTML="Add Value";
-  div_node_Top.id="cardNav_Top_inner_Value";
   div_node_outer.appendChild(div_node_Top);
   //--------END Top Row  -----------//
 
@@ -524,9 +518,9 @@ function Setting_Popup(dom,width,height){
  /* <div class="cardNav">
       <div class="cardNav_Top_outer">
       <div class="cardNav_Top_placeHolder"></div>
-      <div class="cardNav_Top_inner"  id="cardNav_Top_inner_Entry" style="background-color: #aaa;" onclick="cardNavSelect(this)">Add Entry</div>
-      <div class="cardNav_Top_active" id="cardNav_Top_inner_Type"  style="background-color: #ddd;" onclick="cardNavSelect(this)">Add Type</div>
-      <div class="cardNav_Top_inner"  id="cardNav_Top_inner_Value" style="background-color: #777;" onclick="cardNavSelect(this)">Add Value</div>
+      <div class="cardNav_Top_inner"  style="background-color: #aaa;" onclick="cardNavSelect(this)">Add Entry</div>
+      <div class="cardNav_Top_active" style="background-color: #ddd;" onclick="cardNavSelect(this)">Add Type</div>
+      <div class="cardNav_Top_inner"  style="background-color: #777;" onclick="cardNavSelect(this)">Add Value</div>
     </div>
     <div id="cardNav_main" class="cardNav_main">
       najklsefkleasjklesjfkl
@@ -587,27 +581,25 @@ function CreateMainCard(activeCard){
   } else {
     status = "Del";
   }
+
   var dom = document.getElementById("cardNav_main");
 //  dom.innerHTML = activeCard.innerHTML;
 
-  if (activeCard.id.slice(18) === "Value"){
-    getdata_2('getSelection.cgi',values_MainFrame_add,this,'type',status,100,80);
+  if (activeCard.innerHTML.slice(4) === "Value"){
+    getdata_2('getSelection.cgi',values_MainFrame_add,this,'type',100,80);
   }
-  if (activeCard.id.slice(18) === "Type"){
-    type_MainFrame_add(status);
+  if (activeCard.innerHTML.slice(4) === "Type"){
+    type_MainFrame_add();
   }
-  if (activeCard.id.slice(18) === "Entry"){
-    if (status === "Add") {
-      getdata('getTypeValPack.cgi',entry_MainFrame_add);
-    } else {
-      entry_MainFrame_del();
-    }
+  if (activeCard.innerHTML.slice(4) === "Entry"){
+    getdata('getTypeValPack.cgi',entry_MainFrame_add);
+//    entry_MainFrame_add();
   }
 }
 
 //------------------------------------------------------//
 
-function values_MainFrame_add(d,dom,type,status,w,h){
+function values_MainFrame_add(d,dom,w,h){
   clearPopup("cardNav_main");
   // Call getScript to get all kinds of values for a type.
   // returns all kinds which will be put here...
@@ -638,13 +630,7 @@ function values_MainFrame_add(d,dom,type,status,w,h){
   document.getElementById("cardNav_main").appendChild(type_div_node);
 
   var val_txt_node = document.createElement("p");
-  val_txt_node.innerHTML = "";
-  if (status === "Add") {
-    val_txt_node.innerHTML = "new Type: ";
-  } else {
-    val_txt_node.innerHTML = "delete Type:"
-  }
-
+  val_txt_node.innerHTML = "new Value: ";
   var val_div_node = document.createElement("div"); 
   var inp_node     = document.createElement("input");
 
@@ -660,12 +646,7 @@ function values_MainFrame_add(d,dom,type,status,w,h){
 
   var btn_node= document.createElement("input");
   btn_node.type = "button";
-  btn_node.value= "";
-  if (status === "Add") {
-    btn_node.value = "insert";
-  } else {
-    btn_node.value = "delete";
-  }
+  btn_node.value= "change";
   btn_node.className ="SendBtn";
   btn_node.onclick = function (e) {
               getdata_2('add_val.cgi?'+sel.value+'-'+inp_node.value,null,null,null,null,null);
@@ -676,7 +657,7 @@ function values_MainFrame_add(d,dom,type,status,w,h){
 
 //------------------------------------------------------//
 
-function type_MainFrame_add(status){
+function type_MainFrame_add(d,dom,w,h){
   clearPopup("cardNav_main");
   // Call getScript to get all kinds of values for a type.
   // returns all kinds which will be put here...
@@ -684,12 +665,7 @@ function type_MainFrame_add(status){
   var type_txt_node = document.createElement("p");
 
   var val_txt_node = document.createElement("p");
-  val_txt_node.innerHTML = "";
-  if (status === "Add") {
-    val_txt_node.innerHTML = "new Type: ";
-  } else {
-    val_txt_node.innerHTML = "delete Type:"
-  }
+  val_txt_node.innerHTML = "new Type: ";
   var val_div_node = document.createElement("div"); 
   var inp_node     = document.createElement("input");
 
@@ -705,18 +681,10 @@ function type_MainFrame_add(status){
 
   var btn_node= document.createElement("input");
   btn_node.type = "button";
-  btn_node.value= "";
-  if (status === "Add") {
-    btn_node.value = "insert";
-  } else {
-    btn_node.value = "delete";
-  }
-
-
+  btn_node.value= "change";
   btn_node.className ="SendBtn";
   btn_node.onclick = function (e) {
-//              getdata_2('del_val.cgi?'+inp_node.value,null,null,null,null,null);
-alert("delete");
+              getdata_2('add_val.cgi?'+inp_node.value,null,null,null,null,null);
             };
   btn_node.style.marginTop="0px";
   document.getElementById("cardNav_main").appendChild(btn_node);  
@@ -726,21 +694,24 @@ alert("delete");
 
 function entry_MainFrame_add(d,dom,w,h){
   clearPopup("cardNav_main");
+//  var types = [];
+
   try {
-    data_typeValPack = JSON.parse(d);
-    var type = [];
-    for (i in data_typeValPack.Type) {
-      type.push(data_typeValPack.Type[i]);
+    data = JSON.parse(d);
+//    var cnt =0;
+    for (i in data.Type) {
+      type.push(data.Type[i]);
     }
 
-    for (i in data_typeValPack.TypeValue) {
-     valueAddEntry.push(data_typeValPack.TypeValue[i]);
+    for (i in data.TypeValue) {
+     valueAddEntry.push(data.TypeValue[i]);
     }
 
 //    alert(data_typeValPack["TypeValue"]["R"]);
-//    alert(data_typeValPack["Package"]);
+//    alert(data_typeValPack["Pack"]);
   } catch(e){
   }
+
 
   var main_tbl_head = document.getElementById("main_tbl_head");
   var table_node =  document.createElement("table");
@@ -756,7 +727,6 @@ function entry_MainFrame_add(d,dom,w,h){
   table_node.appendChild(tr_node);
 
   tr_node =  document.createElement("tr");
-  var start_type="";
   for (var i=1; i<(main_tbl_head.childNodes.length - 1);i++){ 
     var td_node = document.createElement("td");
 
@@ -776,7 +746,7 @@ function entry_MainFrame_add(d,dom,w,h){
       var sel_node = document.createElement("select");
       var typeLength = type.length;
       sel_node.style.width = "50px";
-      sel_node.onchange = function (e) {changeSelect();};
+      sel_node.onchange = function (e) {changeSelect(this);};
       for (var j=0;j<typeLength;j++){      
         var opt_node = document.createElement("option");
         opt_node.value = type[j];
@@ -784,34 +754,10 @@ function entry_MainFrame_add(d,dom,w,h){
         sel_node.appendChild(opt_node);
       }
       td_node.id="CardNav_AddEntry_type";
-      start_type = sel_node.value;
       td_node.appendChild(sel_node);
     } else if (main_tbl_head.childNodes[i].innerHTML === "value") {
       td_node.id = "CardNav_AddEntry_value";
-      var sel_node = document.createElement("select");
-      sel_node.style.width = "70px";
-      var valueAddEntry_loc = data_typeValPack["TypeValue"][start_type].split(",");
-      var valLength = valueAddEntry_loc.length;
 
-      for (var j=0;j<valLength;j++){      
-        var opt_node = document.createElement("option");
-        opt_node.value =valueAddEntry_loc[j];
-        opt_node.innerHTML = valueAddEntry_loc[j];
-        sel_node.appendChild(opt_node);
-      }
-      td_node.appendChild(sel_node);
-    } else if (main_tbl_head.childNodes[i].innerHTML === "package") {
-      td_node.id = "CardNav_AddEntry_package";
-      var sel_node = document.createElement("select");
-      sel_node.style.width = "70px";
-//      alert(valLength);
-      for (var j in data_typeValPack.Package ){      
-        var opt_node = document.createElement("option");
-        opt_node.value = data_typeValPack["Package"][j];
-        opt_node.innerHTML = data_typeValPack["Package"][j];
-        sel_node.appendChild(opt_node);
-      }
-      td_node.appendChild(sel_node);
 
     } else {
      // td_node.innerHTML = dom.childNodes[i].innerHTML;
@@ -826,10 +772,11 @@ function entry_MainFrame_add(d,dom,w,h){
   document.getElementById("entry_Settings_tbl").style.top="10px";
 //  document.getElementById("entry_Settings_tbl").style.left = ((document.getElementById("popupFrame").clientWidth - document.getElementById("entry_Settings_tbl").clientWidth)/2)+"px";
 
+  
   //Button for Sending changes
   var btn_node= document.createElement("input");
   btn_node.type = "button";
-  btn_node.value="insert";
+  btn_node.value="change";
   btn_node.className="SendBtn";
   //btn_node.style.marginRight=  document.getElementById("entry_Settings_tbl").style.left;
   btn_node.onclick= function (e) {
@@ -839,8 +786,8 @@ function entry_MainFrame_add(d,dom,w,h){
   document.getElementById("cardNav_main").appendChild(btn_node);  
 }
 
-function changeSelect(){
-  var type = document.getElementById("CardNav_AddEntry_type").firstChild.value;
+function changeSelect(type,id){
+  //alert("TEST");
   var td_node = document.getElementById("CardNav_AddEntry_value");
   td_ChildNode_length = td_node.childNodes.length;
   if (td_ChildNode_length > 0 ){
@@ -849,10 +796,11 @@ function changeSelect(){
   }
   td_node.id="CardNav_AddEntry_value";
   var sel_node = document.createElement("select");
-  sel_node.style.width = "70px";
-  var valueAddEntry_loc = data_typeValPack["TypeValue"][type].split(",");
-  var valLength = valueAddEntry_loc.length;
-
+  var valLength = valueAddEntry.length;
+  sel_node.style.width = "50px";
+  sel_node.onchange = function (e) {changeSelect(this);};
+  var valueAddEntry_loc = [];
+  alert(valueAddEntry[0]);
   for (var j=0;j<valLength;j++){      
     var opt_node = document.createElement("option");
     opt_node.value =valueAddEntry_loc[j];
@@ -860,12 +808,6 @@ function changeSelect(){
     sel_node.appendChild(opt_node);
   }
   td_node.appendChild(sel_node);
-}
-
-//----------------------------------------------------------//
-
-function entry_MainFrame_del(d,dom,w,h){
-  clearPopup("cardNav_main");
 }
 //--------------------------------------------------------------------------------------//
 //---------------------         Text_Popup        --------------------------------------//

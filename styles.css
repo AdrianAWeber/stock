@@ -329,8 +329,6 @@ table tr:hover {background-color: #888;}
   right: 0px;
   bottom: 0px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
 }
 
 .slider:before {
@@ -341,7 +339,6 @@ table tr:hover {background-color: #888;}
   left: 4px;
   bottom: 4px;
   background-color: #595959;
-  -webkit-transition: .4s;
   transition: .4s;
 }
 
@@ -366,8 +363,6 @@ input:focus + .slider {
   position: absolute;
   width: 200%;
   margin-top:-1px;
-  -webkit-transition: .4s;
-  transition: .4s;
 }
 
 .slider-text:before, .slider-text:after {
