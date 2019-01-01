@@ -6,7 +6,7 @@ use File::Copy;
 use DBI;
 use JSON::XS;
 
-my ($partnum,$amount,$place,$type,$value,$package,$price,$add) = split('-',$ENV{'QUERY_STRING'});
+my ($partnum,$amount,$place,$type,$value,$package,$price,$add,$new) = split('-',$ENV{'QUERY_STRING'});
 
   print "Cache-Control: no-cache, must-revalidate, max-age=1\r\n";
   print "Expires: Thu, 01 Dec 1994 16:00:00 GMT\r\n";
@@ -27,6 +27,7 @@ $value = "" if !(defined $value);
 $package = "" if !(defined $package);
 $price = 0 if ($price == '');
 $add = 0 if ($add == '');
+$new = 0 if ($new == '');
 #print $package."b\n";
 
 
@@ -61,5 +62,12 @@ if ($add > 0) {
   $rv = $sth->execute() or die print "$DBI::errstr\n";
 
 }
+
+if ($new > 0) {
+  $stmt = qq(INSERT INTO stock VALUES (DEFAULT,'$partnum',$amount,$place,'$type','$value','$package',$price););
+  $sth = $dbh->prepare( $stmt );
+  $rv = $sth->execute() or die print "$DBI::errstr\n";
+}
+
 
 $dbh->disconnect();

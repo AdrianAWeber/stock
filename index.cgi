@@ -110,7 +110,15 @@ print qq$
     </table>
 </div>
     <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
-
+    
+    <label class="switchBtn">
+      <input type="checkbox" onclick="showSearch()" id="SearchBtnInp" title="Search" checked="false"></input>
+      <div id="SearchBtn" class="SearchBtn">
+        <input style="width:50px;height:30px; opacity:1"></input>
+        <span style="float : right; margin-top:6px;">SEARCH</span>
+       </div>
+    </label>
+ 
   </body>
 
 <script>
@@ -769,11 +777,13 @@ function entry_MainFrame_add(d,dom,w,h){
       } else {
 	input.type="text";
       }
+      td_node.id = "CardNav_AddEntry_" + main_tbl_head.childNodes[i].innerHTML;      
       input.style.width="100%";
       //input.value= dom.childNodes[i].innerHTML;      
       td_node.appendChild(input);
     } else if (main_tbl_head.childNodes[i].innerHTML === "type") {
       var sel_node = document.createElement("select");
+      td_node.id = "CardNav_AddEntry_type";
       var typeLength = type.length;
       sel_node.style.width = "50px";
       sel_node.onchange = function (e) {changeSelect();};
@@ -835,6 +845,14 @@ function entry_MainFrame_add(d,dom,w,h){
   btn_node.onclick= function (e) {
                 //send_btn_UpdateAll_Popup(this.parentNode);
                 document.getElementById("Popup").style.visibility = "hidden";
+                var part   = document.getElementById("CardNav_AddEntry_partnum").firstChild.value;
+                var amount = document.getElementById("CardNav_AddEntry_amount").firstChild.value;
+                var place  = document.getElementById("CardNav_AddEntry_place").firstChild.value;
+                var type   = document.getElementById("CardNav_AddEntry_type").firstChild.value;
+                var value  = document.getElementById("CardNav_AddEntry_value").firstChild.value;
+                var pack   = document.getElementById("CardNav_AddEntry_package").firstChild.value;
+                var price  = document.getElementById("CardNav_AddEntry_price").firstChild.value;
+                getdata('setdb.cgi?'+part+'-'+amount+'-'+place+'-'+type+'-'+value+'-'+pack+'-'+price+'-0-1');
             };
   document.getElementById("cardNav_main").appendChild(btn_node);  
 }
