@@ -36,7 +36,7 @@ my $cnt =0;
 my $data;
 
 while(my @row = $sth->fetchrow_array()) {
-    $th_str .= "<th id=\"th_$row[0]\">$row[0]</th>";
+    $th_str .= "<th id=\"th_$row[0]\">$row[0]";
     $data->{$cnt} = $row[0];
     $cnt++;
 }
@@ -74,35 +74,35 @@ print qq$
 $;
 
 print $th_str;
-print "<th> <img width=\"20px\" src=\"wheel.svg\" onclick=\"Setting_Popup(this,600,500)\"> </th>";
+print "<th> <img width=\"20px\" src=\"wheel.svg\" onclick=\"Setting_Popup(this,600,500)\">";
 
-print "</tr>\n";
+print "\n";
 
 while(my @row = $sth2->fetchrow_array()) {
- print " <tr id=\"tr_".$row[0]."\">  \n";
+ print " <tr id=\"tr_".$row[0]."\">";
     for (my $i=0;$i<8;$i++) {
       if ($row[$i] eq "id") {
-        print "<td id=\"td_$data->{$i}\">$row[$i]</td>";
+        print "<td id=\"td_$data->{$i}\">$row[$i]";
       } else {
         if ($data->{$i} eq "amount" || $data->{$i} eq "place" ){
-          print "<td id=\"td_$data->{$i}\" onclick=\"incDec_Popup(this,80,100)\">$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" onclick=\"incDec_Popup(this,80,100)\">$row[$i]";
         } elsif ($data->{$i} eq "partnum"){
-          print "<td id=\"td_$data->{$i}\" onclick=\"text_Popup(this,100,80)\">$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" onclick=\"text_Popup(this,100,80)\">$row[$i]";
         } elsif ($data->{$i} eq "type"){
-          print "<td id=\"td_$data->{$i}\" onclick=\"getdata_2('getSelection.cgi',select_Popup,this,'type',100,80)\">$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" onclick=\"getdata_2('getSelection.cgi',select_Popup,this,'type',100,80)\">$row[$i]";
         } elsif ($data->{$i} eq "value"){
-          print "<td id=\"td_$data->{$i}\" onclick=\"getdata_2('getSelection.cgi',select_Popup,this,'value',100,80)\">$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" onclick=\"getdata_2('getSelection.cgi',select_Popup,this,'value',100,80)\">$row[$i]";
         } elsif ($data->{$i} eq "package"){
           print "<td id=\"td_$data->{$i}\" onclick=\"select_Popup(this,'package',100,80)\">$row[$i]</td>";
         } elsif ($data->{$i} eq "price"){
-          print "<td id=\"td_$data->{$i}\" onclick=\"indec_money_Popup(this,'type',100,80)\">$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" onclick=\"indec_money_Popup(this,'type',100,80)\">$row[$i]";
         } else {
-          print "<td id=\"td_$data->{$i}\" >$row[$i]</td>";
+          print "<td id=\"td_$data->{$i}\" >$row[$i]";
         }
       }  
     }
-print "<td onclick=\"changeAll_Popup(this.parentNode)\"><img width=\"20px\"src=\"sett.svg\"></td>";
-print "</tr>\n";
+print "<td onclick=\"changeAll_Popup(this.parentNode)\"><img width=\"20px\"src=\"sett.svg\">";
+print "\n";
 }
 print qq$	
 
@@ -113,12 +113,14 @@ print qq$
     
     <label class="switchBtn">
       <input type="checkbox" onclick="showSearch()" id="SearchBtnInp" title="Search" checked="false"></input>
-      <div id="SearchBtn" class="SearchBtn">
-        <input style="width:50px;height:30px; opacity:1"></input>
-        <span style="float : right; margin-top:6px;">SEARCH</span>
-       </div>
-    </label>
- 
+      <div id="SearchBtn" class="SearchBtn"">
+        <img style="float : right;height: 25px;" src="search.svg">
+      </div>
+      <div class="SearchBlock">
+        <input style="width:auto;height:25px; opacity:1"></input>
+        <input type="button" value="Search" class="SendBtn" style="left:auto;height:25px;width:auto; opacity:1" >
+      </div>
+    </label> 
   </body>
 
 <script>
@@ -221,6 +223,105 @@ function topmenuselect(){
   }
 }
 
+function refreshMainList(d){
+  var data;
+  data = JSON.parse(d);
+  var datasize = data.length;
+  deleteMainListEntrys();
+
+  for (var i in data){
+    if (i !== 'title') {
+      createMainListEntrys(i,data[i]);
+    }
+  }
+}
+
+function deleteMainListEntrys(){
+  var nodeMain = document.getElementById("list").childNodes[1].childNodes[1];
+  var node = document.getElementById("list").childNodes[1].childNodes[1].childNodes;
+  var nodeLength = node.length;
+  for (var i=(nodeLength-1); i>0;i--){
+    nodeMain.removeChild(node[i]);
+  }
+}
+
+function createMainListEntrys(id, data){
+  var nodeMain = document.getElementById("list").childNodes[1].childNodes[1];
+  var tr_node  = document.createElement("tr");
+  tr_node.id = "tr_"+id;
+  var td_node  = document.createElement("td");
+  td_node.id = "td_id";
+  td_node.innerHTML=id;
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.id = "td_partnum";
+  td_node.innerHTML=data.partnum;
+  td_node.onclick = function (e){
+    text_Popup(this,100,80);
+  }
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.id = "td_amount";
+  td_node.innerHTML=data.amount;
+  td_node.onclick = function (e){
+    incDec_Popup(this,80,100);
+  }
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.id = "td_place";
+  td_node.innerHTML=data.place;
+  td_node.onclick = function (e){
+    incDec_Popup(this,80,100);
+  }
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.id = "td_type";
+  td_node.innerHTML=data.type;
+  td_node.onclick = function (e){
+    getdata_2('getSelection.cgi',select_Popup,this,'type',100,80);
+  }
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.id = "td_value";
+  td_node.innerHTML=data.value;
+  td_node.onclick = function (e){
+    getdata_2('getSelection.cgi',select_Popup,this,'value',100,80);
+  }
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.id = "td_package";
+  td_node.innerHTML=data.package;
+  td_node.onclick = function (e){
+    select_Popup(this,'package',100,80);
+  }
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.id = "td_price";
+  td_node.innerHTML=data.price;
+  td_node.onclick = function (e){
+    indec_money_Popup(this,'type',100,80);
+  }
+  tr_node.appendChild(td_node);
+
+  var td_node  = document.createElement("td");
+  td_node.onclick = function (e){
+    changeAll_Popup(this.parentNode);
+  }
+  var img_node = document.createElement("img");
+  img_node.width = 20;
+  img_node.src   = "sett.svg";
+  td_node.appendChild(img_node);
+  tr_node.appendChild(td_node);
+
+  nodeMain.appendChild(tr_node);
+}
 
 //------------------------------------------------------------------//
 //------------------------    Basic Popup    -----------------------//
@@ -242,6 +343,7 @@ function ClsBtn_Popup(){
     document.getElementsByClassName("slider-text")[0].style.transitionDuration = ".0s";
   } catch (e){}
   document.getElementById("Popup").style.visibility = "hidden";
+  getdata('getdb.cgi',refreshMainList);
 }
 
 function SetMainPopup(width,height,name) {
@@ -296,8 +398,8 @@ function changeAll_Popup(dom) {
   }
   table_node.appendChild(tr_node);
 
-  tr_node =  document.createElement("tr");
-  for (var i=1; i<(dom.childNodes.length - 1);i++){ 
+  tr_node = document.createElement("tr");
+  for (var i=1; i<(dom.childNodes.length);i++){ 
     var td_node = document.createElement("td");
 
     //insert input fields in rows. Not in case of id.
@@ -310,11 +412,15 @@ function changeAll_Popup(dom) {
 	input.type="text";
       }
       input.style.width="100%";
-      input.value= dom.childNodes[i].innerHTML;      
+      input.value= dom.childNodes[i-1].innerHTML;      
+      
       td_node.appendChild(input);
+//      if (main_tbl_head.childNodes[i].innerHTML == "partnum") {alert("partnum");}
+
     } else {
-      td_node.innerHTML = dom.childNodes[i].innerHTML;
-    }   
+      td_node.innerHTML = dom.childNodes[i-1].innerHTML;
+    } 
+    td_node.id=main_tbl_head.childNodes[i].innerHTML;  
     tr_node.appendChild(td_node);
   }
 
@@ -333,7 +439,8 @@ function changeAll_Popup(dom) {
   btn_node.style.marginRight=  document.getElementById("popup_tbl").style.left;
   btn_node.onclick= function (e) {
                 send_btn_UpdateAll_Popup(this.parentNode);
-                document.getElementById("Popup").style.visibility = "hidden";
+//                document.getElementById("Popup").style.visibility = "hidden";
+ClsBtn_Popup();
             };
   popupFrame.appendChild(btn_node);  
 }
@@ -341,7 +448,7 @@ function changeAll_Popup(dom) {
 
 function send_btn_UpdateAll_Popup(dom) {
   var str ="";
-  var tr = dom.childNodes[1].childNodes[1];
+  var tr = dom.childNodes[0].childNodes[1];
   for (var i=0; i<(tr.childNodes.length);i++){
     if ( tr.childNodes[i].firstChild.nodeName == "INPUT" ) {   
       if ( i===(tr.childNodes.length-1)) { 

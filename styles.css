@@ -411,6 +411,7 @@ input:checked ~ .slider:before{
   position: fixed;
   top: 70px;
   left: -2px;
+  margin:0;
   z-index: 99;
   font-size: 14px;
   border: none;
@@ -418,17 +419,13 @@ input:checked ~ .slider:before{
   background-color: #a5a5a5;
   color: white;
   cursor: pointer;
-  padding: 15px;
+  padding: 5px;
+  padding-right:10px;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   margin-left:0px;
   width : 200px;
   transition: 0.4s;
-
-}
-
-.SearchBtn:hover {
-  background-color: #555;
 }
 
 .SearchBtn:before {
@@ -440,9 +437,33 @@ input:checked ~ .slider:before{
 }
 
 #SearchBtnInp:checked + .SearchBtn{
- margin-left: -170px;
+ margin-left: -175px;
 }
 
 #SearchBtnInp:checked #list{
   margin-top: 270px;
+}
+
+.SearchBlock {
+  display: block;
+  position: fixed;
+  top: 70px;
+  left: -2px;
+  margin:0;
+  z-index: 99;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  background-color: #a5a5a5;
+  color: white;
+  padding: 5px;
+  padding-right:10px;
+  margin-left:0px;
+  width : 150px;
+  transition: 0.4s;
+  height: auto;
+}
+
+#SearchBtnInp:checked ~ .SearchBlock{
+ margin-left: -175px;
 }

@@ -33,17 +33,30 @@ if($rv < 0) {
 #print "\{\n";
 
 my $data;
+my @title;
 
 while(my @row = $sth->fetchrow_array()) {
-    $data->{$row[0]} = "";
+    $data->{'title'}->{$row[0]} = "";
 #    print $row[0] . "\",\n";
+    push @title , $row[0];
 }
 
-#my $stmt = qq(SELECT  FROM information_schema.columns WHERE table_name = 'stock';);#
+$stmt = qq(SELECT * FROM stock;);
 
-#my $sth = $dbh->prepare( $stmt );
-#my $rv = $sth->execute() or die $DBI::errstr;
+$sth = $dbh->prepare($stmt);
+$rv = $sth->execute() or die $DBI::errstr;
 
+if($rv < 0) {
+   print $DBI::errstr;
+}
+
+while(my @row = $sth->fetchrow_array()) {
+  for my $i (1 .. $#title) {  
+    $data->{$row[0]}->{$title[$i]} = "$row[$i]";
+  }
+}
+
+#print Dumper \@title;
 
 print encode_json($data);
 #print "\}\n";
