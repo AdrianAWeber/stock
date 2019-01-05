@@ -245,8 +245,9 @@ function deleteMainListEntrys(){
   }
 }
 
-function createMainListEntrys(id, data){
-  var nodeMain = document.getElementById("list").childNodes[1].childNodes[1];
+function createMainListEntrys(id, data, MainNodeId){
+  if (!MainNodeId) MainNodeId = "list";
+  var nodeMain = document.getElementById(MainNodeId).childNodes[1].childNodes[1];
   var tr_node  = document.createElement("tr");
   tr_node.id = "tr_"+id;
   var td_node  = document.createElement("td");
@@ -715,7 +716,7 @@ function CreateMainCard(activeCard){
     if (status === "Add") {
       getdata('getTypeValPack.cgi',entry_MainFrame_add);
     } else {
-      entry_MainFrame_del();
+      getdata('getdb.cgi',entry_MainFrame_del);
     }
   }
 }
@@ -989,8 +990,140 @@ function changeSelect(){
 
 //----------------------------------------------------------//
 
-function entry_MainFrame_del(d,dom,w,h){
+function entry_MainFrame_del(d,page){
   clearPopup("cardNav_main");
+  if (!page) page = 0;
+  var data;
+  data = JSON.parse(d);
+  var id=1;
+  makeHeadline();
+  var cnt = 0;
+for (var i in data){
+  if (i !== "title"){  
+    //alert(data[i].partnum);
+    if (cnt >= page) {
+      makeEntry(data[i],i);
+    }
+    cnt++;
+  }
+  if (cnt === (page+7)) {break;}
+}
+
+
+  //--------------------------------------------------//
+  function makeEntry(data,id){ 
+    var nodeMain = document.getElementById("cardNav_Entry_tbl_del");
+    var tr_node  = document.createElement("tr");
+    tr_node.id = "tr_"+id+"cardNav";
+    var td_node  = document.createElement("td");
+    td_node.id = "td_id_cardNav";
+    td_node.innerHTML=id;
+    tr_node.appendChild(td_node);
+
+    var td_node = document.createElement("td");
+    td_node.id  = "td_"+id+"_partnum_cardNav";
+    td_node.innerHTML=data.partnum;
+    tr_node.appendChild(td_node);
+
+    td_node    = document.createElement("td");
+    td_node.id = "td_"+id+"_amount_cardNav";
+    td_node.innerHTML=data.amount;
+    tr_node.appendChild(td_node);
+
+    td_node    = document.createElement("td");
+    td_node.id = "td_"+id+"_place_cardNav";
+    td_node.innerHTML=data.place;
+    tr_node.appendChild(td_node);
+
+    td_node    = document.createElement("td");
+    td_node.id = "td_"+id+"_type_cardNav";
+    td_node.innerHTML=data.type;
+    tr_node.appendChild(td_node);
+
+    td_node    = document.createElement("td");
+    td_node.id = "td_"+id+"_value_cardNav";
+    td_node.innerHTML=data.value;
+    tr_node.appendChild(td_node);
+
+    td_node    = document.createElement("td");
+    td_node.id = "td_"+id+"_package_cardNav";
+    td_node.innerHTML=data.package;
+    tr_node.appendChild(td_node);
+
+    td_node    = document.createElement("td");
+    td_node.id = "td_"+id+"_price_cardNav";
+    td_node.innerHTML=data.price;
+    tr_node.appendChild(td_node);
+
+    var td_node  = document.createElement("td");
+    td_node.onclick = function (e){
+      var id_val = this.parentNode.firstChild.innerHTML;
+      alert("DELETE"+id_val);
+    }
+    var img_node = document.createElement("img");
+    img_node.width = 20;
+    img_node.src   = "sett.svg";
+    td_node.appendChild(img_node);
+    tr_node.appendChild(td_node);
+
+    nodeMain.appendChild(tr_node);
+  }
+
+  function makeHeadline(){ 
+    var main     = document.getElementById("cardNav_main");
+    var tbl_node = document.createElement("table");
+    tbl_node.id  = "cardNav_Entry_tbl_del";
+    var tr_node  = document.createElement("tr");
+    tr_node.id   = "th_cardNav";
+
+    var th_node = document.createElement("th");
+    th_node.id = "td_id_cardNav";
+    th_node.innerHTML="id";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_partnum_cardNav";
+    th_node.innerHTML="partnum";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_amount_cardNav";
+    th_node.innerHTML="amount";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_place_cardNav";
+    th_node.innerHTML="place";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_type_cardNav";
+    th_node.innerHTML="type";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_value_cardNav";
+    th_node.innerHTML="value";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_package_cardNav";
+    th_node.innerHTML="package";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_price_cardNav";
+    th_node.innerHTML="price";
+    tr_node.appendChild(th_node);
+
+    th_node = document.createElement("th");
+    th_node.id = "td_del_cardNav";
+    th_node.innerHTML="X";
+    tr_node.appendChild(th_node);
+
+    tbl_node.appendChild(tr_node);
+    main.appendChild(tbl_node);
+  }
 }
 //--------------------------------------------------------------------------------------//
 //---------------------         Text_Popup        --------------------------------------//
